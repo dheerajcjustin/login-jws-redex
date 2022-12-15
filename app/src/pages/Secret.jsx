@@ -5,21 +5,17 @@ import axios from "../config/axios";
 
 export const Secret = () => {
   const logout = () => {
-    console.log("logging out");
     localStorage.removeItem("user");
   };
   useEffect(() => {
     const token = localStorage.getItem("user");
     if (!token) {
-      console.log("user does not exited");
     } else {
-      console.log(token);
       axios
         .get("/user/secret", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          console.log(response.data);
           if (response.data.status) {
             setSecret(response.data.massage);
           }

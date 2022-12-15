@@ -6,16 +6,5 @@ import { Signup } from "../pages/Signup";
 import { Secret } from "../pages/Secret";
 
 export const MainRoutes = () => {
-  return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="secret" element={<Secret />}></Route>
-        </Routes>
-      </Router>
-    </>
-  );
+  return <></>;
 };

@@ -91,6 +91,44 @@ const userVerify = (req, res) => {
   });
 };
 
+const viewProfile = async (req, res) => {
+  if (!req.user) {
+    res.json({
+      status: false,
+      massage: "user dose not exits",
+    });
+  } else {
+    const user = await User.findById(req.user.userId);
+
+    res.json({
+      status: true,
+      massage: "dont tell this to anyone ",
+      user: user,
+    });
+  }
+};
+
+const uploadImage = async (req, res) => {
+  console.log("prpofilwe upload req.body", req.body);
+  if (!req.user) {
+    res.json({
+      status: false,
+      massage: "user dose not exits",
+    });
+  } else {
+    const user = await User.findByIdAndUpdate(req.user.userId, {
+      $set: { profileImage: req.body.url },
+    });
+
+    res.json({
+      status: true,
+      massage: "dont tell this to anyone ",
+    });
+  }
+};
+exports.uploadImage = uploadImage;
+
+exports.viewProfile = viewProfile;
 exports.secret = secret;
 
 exports.login = login;

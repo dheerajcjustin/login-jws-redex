@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const port = 5000;
 const server = express();
 
@@ -10,6 +11,7 @@ server.use(express.urlencoded({ extended: true }));
 server.use(cors());
 
 server.use("/user", userRoutes);
+server.use("/admin", adminRoutes);
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/react_aminlogin")

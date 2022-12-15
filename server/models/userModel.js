@@ -14,6 +14,7 @@ const userSchema = new schema({
   },
   password: { type: String, trim: true },
   refreshToken: { type: String },
+  profileImage: { type: String },
 
   todos: [
     {

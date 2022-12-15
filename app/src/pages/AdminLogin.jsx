@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../config/axios";
-import { changeLoginStatus } from "../config/redux";
+import { changeUserType } from "../config/redux";
 import { useSelector, useDispatch } from "react-redux";
 
-export const Login = () => {
-  const loginStatus = useSelector((state) => state.loginStatus);
+export const AdminLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const adminLogged = useSelector((state) => state.admin);
+  useEffect(() => {
+    console.log("admin login status", adminLogged);
+    if (adminLogged) {
+      navigate("/admin");
+    }
+  }, [adminLogged]);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -22,27 +27,32 @@ export const Login = () => {
   };
   const loginSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("/user/login", userData);
+    const response = await axios.post("/admin/login", userData);
     if (!response.data.status) {
       setLoginStatus(false);
     } else {
-      localStorage.setItem("user", response.data.accessToken);
+      console.log(response.data.accessToken);
+      localStorage.setItem("admin", response.data.accessToken);
       setLoginStatus(true);
-      dispatch(changeLoginStatus(true));
-      navigate("/ ");
+      dispatch(changeUserType(true));
+      navigate("/admin");
     }
+
+    useEffect(() => {
+      console.log("admin login status", adminLogged);
+      if (adminLogged) {
+        navigate("/admin");
+      }
+    }, [adminLogged]);
   };
   return (
     <>
-      <h1>Login</h1>
-      <Link to="/">Home</Link>
-
       <form
         className="max-w-[500px] w-full mx-auto bg-gray-900  p-8 px-10 rounded-lg"
         onSubmit={loginSubmit}
       >
         <h2 className="text-4xl text-white text-center font-bold mb-7">
-          Login
+          Admin Login
         </h2>
         <div className="flex flex-col text-gray-100">
           <label htmlFor="email">Email</label>
