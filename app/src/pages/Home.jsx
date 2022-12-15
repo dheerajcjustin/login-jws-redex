@@ -1,35 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { changeTesting } from "../config/redux";
+import { changeLoginStatus } from "../config/redux";
+import axios from "../config/axios";
 
 export const Home = () => {
-  const value = useSelector((state) => state.value);
+  const loginStatus = useSelector((state) => state.loginStatus);
   const dispatch = useDispatch();
-  setTimeout(() => {
-    dispatch(changeTesting({ name: "wowo ", posa: "tata" }));
-  }, 4000);
-  // const getAllPrivatePosts = () => {
-  //   // setAuthHeader().then((response) => {
-  //   //   console.log("trss ", response);
-  //   // });
-  //   return axios.get("/user/secret", {
-  //     headers: { Authorization: `Bearer ${setAuthHeader()}` },
-  //   });
-  //   // return axios.get("/user/secret");
-  // };
-  // const [value, setValue] = useState("");
-  // useEffect(() => {
-  //   getAllPrivatePosts().then((response) => {
-  //     console.log(response.data.secret);
-  //     setValue(response.data.secret);
-  //   });
-  // }, []);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("user");
+    if (!token) {
+      console.log("user does not exited");
+      navigate("/login");
+    } else {
+      axios
+        .get("/user/secret", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.status) {
+            console.log("hai response is true");
+            dispatch(changeLoginStatus(true));
+          } else {
+            navigate("/login");
+
+            dispatch(changeLoginStatus(false));
+          }
+        });
+    }
+  }, [loginStatus]);
 
   return (
     <div className="text-center">
       <h1>Home</h1>
-      <h1>login status is {value} </h1>
+      <h1>login status is </h1>
       <Link to="/login">Login</Link>
       <br />
       <Link to="/signup">Signup</Link>

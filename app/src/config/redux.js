@@ -8,9 +8,14 @@ const authSlice = createSlice({
     admin: false,
     userId: "",
     isLoading: false,
+    profilePic: "",
   },
 
   reducers: {
+    changeProfilePic(state, action) {
+      console.log("change profile pic ");
+      state.profilePic = action.payload;
+    },
     changeUserType(state, action) {
       state.admin = action.payload;
     },
@@ -32,6 +37,7 @@ export const {
   changeTesting,
   changeLoginStatus,
   changeUserType,
+  changeProfilePic,
 } = authSlice.actions;
 
 export const store = configureStore({

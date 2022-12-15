@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "../config/axios";
+import { changeLoginStatus } from "../config/redux";
+import { useSelector, useDispatch } from "react-redux";
 
 export const Signup = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
@@ -116,7 +119,27 @@ export const Signup = () => {
       }
     }
   };
-
+  useEffect(() => {
+    const token = localStorage.getItem("user");
+    if (!token) {
+      console.log("user does not exited");
+    } else {
+      axios
+        .get("/user/secret", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.status) {
+            console.log("hai response is true");
+            dispatch(changeLoginStatus(true));
+            navigate("/");
+          } else {
+            dispatch(changeLoginStatus(false));
+          }
+        });
+    }
+  }, []);
   return (
     <>
       <Link to="/">Home</Link>
@@ -186,9 +209,7 @@ export const Signup = () => {
             <p className="text-red-300">{validation.password.message}</p>
           )}
         </div>
-        <div className=" text-right text-gray-400 py-2">
-          <p className="cursor-pointer underline">Forgot password</p>
-        </div>
+        <div className=" text-right text-gray-400 py-2"></div>
         <div className="text-center">
           <button className="w-96 my-5 bg-emerald-500 py-3 rounded-lg shadow-lg shadow-emerald-500/50  hover:w-full transition-all text-xl font-semibold">
             Signup

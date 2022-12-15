@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../config/axios";
 import { changeLoginStatus } from "../config/redux";
@@ -32,6 +32,30 @@ export const Login = () => {
       navigate("/ ");
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("user");
+    if (!token) {
+      console.log("user does not exited");
+      navigate("/login");
+    } else {
+      axios
+        .get("/user/secret", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.status) {
+            console.log("hai response is true");
+            dispatch(changeLoginStatus(true));
+            navigate("/");
+          } else {
+            dispatch(changeLoginStatus(false));
+          }
+        });
+    }
+  }, [loginStatus]);
+
   return (
     <>
       <h1>Login</h1>

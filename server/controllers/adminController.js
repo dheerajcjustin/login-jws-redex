@@ -46,5 +46,13 @@ const adminDashboard = async (req, res) => {
   });
 };
 
+const userEdit = async (req, res) => {
+  console.log("req.body of edit is ", req.body);
+  await User.findByIdAndUpdate(req.body.userId, {
+    $set: { name: req.body.name, email: req.body.email },
+  });
+  res.json({ status: true });
+};
+exports.userEdit = userEdit;
 exports.adminDashboard = adminDashboard;
 exports.login = login;
